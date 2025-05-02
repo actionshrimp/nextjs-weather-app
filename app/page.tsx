@@ -10,7 +10,7 @@ export default function Home() {
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (city.trim()) {
-      router.push(`/weather/${encodeURIComponent(city.trim())}`);
+      router.push(`/weather/${encodeURIComponent(city.trim().toLowerCase())}`);
     }
   };
 

@@ -1,14 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import Link from "next/link";
 import { WeatherData, ForecastData } from "@/types/weather";
 import Image from 'next/image';
 
 export default function WeatherPage() {
   const params = useParams();
-  const router = useRouter();
   const city = params.city as string;
 
   const [currentWeather, setCurrentWeather] = useState<WeatherData | null>(null);
