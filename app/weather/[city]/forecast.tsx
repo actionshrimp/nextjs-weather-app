@@ -9,7 +9,8 @@ import Image from 'next/image';
 type props = { data: ForecastData };
 
 export default function Forecast({ data }: props) {
-  const formattedDate = new Date(data.date).toLocaleDateString('en-GB', {
+  // Render in the user's date format
+  const formattedDate = new Date(data.date).toLocaleDateString(undefined, {
     weekday: 'short',
     month: 'short',
     day: 'numeric',
