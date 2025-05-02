@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import axios from "axios";
 
 const API_KEY = process.env.OPENWEATHERMAP_API_KEY;
 const BASE_URL = "https://api.openweathermap.org/data/2.5";
@@ -17,26 +16,45 @@ export async function GET(request: NextRequest) {
 
   try {
     // Get current weather
-    const currentWeatherResponse = await axios.get(
+    const currentWeatherResponse = await fetch(
       `${BASE_URL}/weather?q=${encodeURIComponent(city)}&units=metric&appid=${API_KEY}`
     );
 
+    if (!currentWeatherResponse.ok) {
+      const errorData = await currentWeatherResponse.json();
+      if (currentWeatherResponse.status === 404) {
+        return NextResponse.json(
+          { message: "City not found" },
+          { status: 404 }
+        );
+      }
+      throw new Error(errorData.message || "Failed to fetch current weather data");
+    }
+
+    const currentWeatherData = await currentWeatherResponse.json();
+
     // Get forecast data
-    const forecastResponse = await axios.get(
+    const forecastResponse = await fetch(
       `${BASE_URL}/forecast?q=${encodeURIComponent(city)}&units=metric&appid=${API_KEY}`
     );
 
+    if (!forecastResponse.ok) {
+      throw new Error("Failed to fetch forecast data");
+    }
+
+    const forecastData = await forecastResponse.json();
+
     // Process current weather data
     const currentWeather = {
-      temp: currentWeatherResponse.data.main.temp,
-      description: currentWeatherResponse.data.weather[0].description,
-      humidity: currentWeatherResponse.data.main.humidity,
-      windSpeed: currentWeatherResponse.data.wind.speed,
-      icon: currentWeatherResponse.data.weather[0].icon,
+      temp: currentWeatherData.main.temp,
+      description: currentWeatherData.weather[0].description,
+      humidity: currentWeatherData.main.humidity,
+      windSpeed: currentWeatherData.wind.speed,
+      icon: currentWeatherData.weather[0].icon,
     };
 
     // Process forecast data - get one forecast per day for the next 3 days
-    const forecastList = forecastResponse.data.list;
+    const forecastList = forecastData.list;
     const dailyForecasts: any[] = [];
     const processedDates = new Set();
 
@@ -82,13 +100,6 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error("Weather API error:", error);
-    
-    if (axios.isAxiosError(error) && error.response?.status === 404) {
-      return NextResponse.json(
-        { message: "City not found" },
-        { status: 404 }
-      );
-    }
     
     return NextResponse.json(
       { message: "Failed to fetch weather data" },
