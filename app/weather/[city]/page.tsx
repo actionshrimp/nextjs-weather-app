@@ -81,8 +81,8 @@ export default function WeatherPage() {
               <p className="text-4xl font-bold mt-2">{Math.round(currentWeather.temp)}°C</p>
               <p className="text-gray-600 capitalize">{currentWeather.description}</p>
             </div>
-            <div><Image alt={currentWeather.description} src={`https://openweathermap.org/img/wn/${currentWeather.icon}@2x.png`} width={100} height={100} /></div>
             <div className="text-right">
+              <Image alt={currentWeather.description} src={`https://openweathermap.org/img/wn/${currentWeather.icon}@2x.png`} width={100} height={100} />
               <div className="flex flex-col">
                 <span className="text-gray-600">Humidity: {currentWeather.humidity}%</span>
                 <span className="text-gray-600">Wind: {currentWeather.windSpeed} m/s</span>
@@ -98,9 +98,14 @@ export default function WeatherPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {forecast.map((day, index) => (
               <div key={index} className="bg-white rounded-lg shadow-md p-4">
-                <h3 className="font-semibold text-lg mb-2">{day.date}</h3>
-                <p className="text-2xl font-bold">{Math.round(day.temp)}°C</p>
-                <p className="text-gray-600 capitalize">{day.description}</p>
+                <div className="flex justify-between">
+                  <div>
+                    <h3 className="font-semibold text-lg mb-2">{day.date}</h3>
+                    <p className="text-2xl font-bold">{Math.round(day.temp)}°C</p>
+                    <p className="text-gray-600 capitalize">{day.description}</p>
+                  </div>
+                  <Image alt={day.description} src={`https://openweathermap.org/img/wn/${day.icon}@2x.png`} width={100} height={100} />
+                </div>
               </div>
             ))}
           </div>
