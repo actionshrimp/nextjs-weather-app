@@ -7,3 +7,7 @@
 
     npm ci
     npm run dev
+
+## Run the tests
+
+    npm test
