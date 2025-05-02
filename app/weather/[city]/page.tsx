@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { WeatherData, ForecastData } from '@/types/weather';
 import Image from 'next/image';
 import Forecast from './forecast';
+import LoadingSpinner from '@/app/components/LoadingSpinner';
 
 export default function WeatherPage() {
   const params = useParams();
@@ -49,7 +50,7 @@ export default function WeatherPage() {
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-[80vh]">
-        <div className="text-xl">Loading weather data...</div>
+        <LoadingSpinner />
       </div>
     );
   }
