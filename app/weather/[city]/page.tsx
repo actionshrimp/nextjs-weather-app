@@ -90,7 +90,7 @@ export default function WeatherPage() {
         </div>
         <button
           onClick={() => setRefreshedAt(() => new Date())}
-          className="h-10 bg-orange-400 rounded p-2"
+          className="h-10 bg-orange-400 rounded p-2 font-bold"
         >
           Refresh
         </button>
