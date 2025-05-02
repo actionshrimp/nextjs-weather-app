@@ -16,6 +16,7 @@ export default function WeatherPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [forecastDaysCount, setForecastDaysCount] = useState<number>(3);
+  const [refreshedAt, setRefreshedAt] = useState<Date>(new Date());
 
   useEffect(() => {
     const fetchWeatherData = async () => {
@@ -43,7 +44,7 @@ export default function WeatherPage() {
     if (city) {
       fetchWeatherData();
     }
-  }, [city]);
+  }, [city, refreshedAt]);
 
   if (loading) {
     return (
@@ -69,14 +70,31 @@ export default function WeatherPage() {
   const available = forecast?.length ?? 0;
   const toDisplay = forecast?.slice(0, forecastDaysCount);
 
+  const dataRefreshedAt = new Date(refreshedAt).toLocaleDateString(undefined, {
+    hour: 'numeric',
+    minute: 'numeric',
+    second: 'numeric',
+  });
+
   return (
     <div className="py-8">
       <Link href="/" className="text-blue-500 hover:underline mb-6 inline-block">
         ← Back to search
       </Link>
-      <h1 className="text-3xl font-bold mb-6">
-        Weather for {currentWeather?.cityName}, {currentWeather?.countryCode}
-      </h1>
+      <div className="flex justify-between align-center mb-6">
+        <div>
+          <h1 className="text-3xl font-bold">
+            Weather for {currentWeather?.cityName}, {currentWeather?.countryCode}
+          </h1>
+          <div>Data refreshed at: {dataRefreshedAt}</div>
+        </div>
+        <button
+          onClick={() => setRefreshedAt(() => new Date())}
+          className="h-10 bg-orange-400 rounded p-2"
+        >
+          Refresh
+        </button>
+      </div>
       {currentWeather && (
         <div className="bg-white rounded-lg shadow-md p-6 mb-6">
           <div className="flex flex-col md:flex-row items-center justify-between">
