@@ -2,7 +2,13 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    remotePatterns: [new URL('https://openweathermap.org/img/wn/**')],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'openweathermap.org',
+        pathname: '/img/wn/**',
+      },
+    ],
   },
 };
 
