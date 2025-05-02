@@ -47,6 +47,8 @@ export async function GET(request: NextRequest) {
       humidity: currentWeatherData.main.humidity,
       windSpeed: currentWeatherData.wind.speed,
       icon: currentWeatherData.weather[0].icon,
+      cityName: currentWeatherData.name,
+      countryCode: currentWeatherData.sys.country,
     };
 
     // Process forecast data - get one forecast per day for the next 3 days

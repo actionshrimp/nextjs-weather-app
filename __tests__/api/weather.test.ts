@@ -47,7 +47,9 @@ describe('Weather API', () => {
       main: { temp: 20, humidity: 70 },
       weather: [{ description: 'clear sky', icon: '01d' }],
       wind: { speed: 5 },
-      timezone: 0
+      timezone: 0,
+      name: 'London',
+      sys: { country: 'GB' }
     };
 
     const mockForecast = {

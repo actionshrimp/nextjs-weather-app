@@ -74,7 +74,9 @@ export default function WeatherPage() {
       <Link href="/" className="text-blue-500 hover:underline mb-6 inline-block">
         ← Back to search
       </Link>
-      <h1 className="text-3xl font-bold mb-6">Weather for {city}</h1>
+      <h1 className="text-3xl font-bold mb-6">
+        Weather for {currentWeather?.cityName}, {currentWeather?.countryCode}
+      </h1>
       {currentWeather && (
         <div className="bg-white rounded-lg shadow-md p-6 mb-6">
           <div className="flex flex-col md:flex-row items-center justify-between">

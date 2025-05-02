@@ -4,6 +4,8 @@ export interface WeatherData {
   humidity: number;
   windSpeed: number;
   icon: string;
+  cityName: string;
+  countryCode: string;
 }
 
 export interface ForecastData {
