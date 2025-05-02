@@ -8,7 +8,13 @@ export interface WeatherData {
 
 export interface ForecastData {
   date: string;
-  temp: number;
+  tempMin: number;
+  tempMax: number;
   description: string;
   icon: string;
+}
+
+export interface ApiResponse {
+  current: WeatherData,
+  forecast: ForecastData[]
 }

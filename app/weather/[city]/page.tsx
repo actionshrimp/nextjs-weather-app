@@ -15,6 +15,7 @@ export default function WeatherPage() {
   const [forecast, setForecast] = useState<ForecastData[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [forecastDaysCount, setForecastDaysCount] = useState<number>(3);
 
   useEffect(() => {
     const fetchWeatherData = async () => {
@@ -65,14 +66,15 @@ export default function WeatherPage() {
     );
   }
 
+  const available = forecast?.length ?? 0;
+  const toDisplay = forecast?.slice(0, forecastDaysCount);
+
   return (
     <div className="py-8">
       <Link href="/" className="text-blue-500 hover:underline mb-6 inline-block">
         ← Back to search
       </Link>
-
       <h1 className="text-3xl font-bold mb-6">Weather for {city}</h1>
-
       {currentWeather && (
         <div className="bg-white rounded-lg shadow-md p-6 mb-6">
           <div className="flex flex-col md:flex-row items-center justify-between">
@@ -96,16 +98,23 @@ export default function WeatherPage() {
           </div>
         </div>
       )}
-
-      {forecast && forecast.length > 0 && (
+      {toDisplay && toDisplay.length > 0 && (
         <div>
-          <h2 className="text-2xl font-semibold mb-4">3-Day Forecast</h2>
+          <h2 className="text-2xl font-semibold mb-4">Forecast</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {forecast.map(data => (
+            {toDisplay.map(data => (
               <Forecast key={data.date} data={data} />
             ))}
           </div>
         </div>
+      )}
+      {forecastDaysCount < available && (
+        <button
+          className="bg-white rounded-lg shadow-md p-2 mt-6 mb-6 w-full"
+          onClick={_e => setForecastDaysCount((x: number) => x + 3)}
+        >
+          Load more
+        </button>
       )}
     </div>
   );

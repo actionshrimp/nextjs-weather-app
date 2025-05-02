@@ -1,3 +1,4 @@
+import { ForecastData } from '@/types/weather';
 import { NextRequest, NextResponse } from 'next/server';
 
 const API_KEY = process.env.OPENWEATHERMAP_API_KEY;
@@ -37,6 +38,7 @@ export async function GET(request: NextRequest) {
     }
 
     const forecastData = await forecastResponse.json();
+    const timezone = currentWeatherData.timezone;
 
     // Process current weather data
     const currentWeather = {
@@ -49,48 +51,38 @@ export async function GET(request: NextRequest) {
 
     // Process forecast data - get one forecast per day for the next 3 days
     const forecastList = forecastData.list;
-    const dailyForecasts: any[] = [];
-    const processedDates = new Set();
-
-    // Start from tomorrow (skip today's forecasts)
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    tomorrow.setHours(0, 0, 0, 0);
+    const dailyForecasts: Record<string, ForecastData> = {};
 
     for (const forecast of forecastList) {
-      const forecastDate = new Date(forecast.dt * 1000);
-      const dateString = forecastDate.toISOString().split('T')[0];
+      const forecastDate = new Date((forecast.dt + timezone) * 1000);
+      const dateString: string = forecastDate.toISOString().split('T')[0];
 
-      // Only include forecasts for future dates and around noon (12-15h)
-      if (
-        forecastDate >= tomorrow &&
-        !processedDates.has(dateString) &&
-        forecastDate.getHours() >= 12 &&
-        forecastDate.getHours() <= 15
-      ) {
-        dailyForecasts.push({
-          date: new Date(forecast.dt * 1000).toLocaleDateString('en-GB', {
-            weekday: 'short',
-            month: 'short',
-            day: 'numeric',
-          }),
-          temp: forecast.main.temp,
-          description: forecast.weather[0].description,
-          icon: forecast.weather[0].icon,
-        });
-
-        processedDates.add(dateString);
-
-        // Stop after we have 3 days
-        if (dailyForecasts.length === 3) {
-          break;
-        }
+      const current = dailyForecasts[dateString] ?? {
+        date: dateString,
+        tempMin: forecast.main.temp,
+        tempMax: forecast.main.temp,
+        description: forecast.weather[0].description,
+        icon: forecast.weather[0].icon,
       }
+
+      if (forecast.main.temp < current.tempMin) {
+        current.tempMin = forecast.main.temp
+      }
+      if (forecast.main.temp > current.tempMax) {
+        current.tempMax = forecast.main.temp
+      }
+
+      dailyForecasts[dateString] = current;
+    }
+
+    const forecast = []
+    for (let [date, f] of Object.entries(dailyForecasts)) {
+      forecast.push(f)
     }
 
     return NextResponse.json({
       current: currentWeather,
-      forecast: dailyForecasts,
+      forecast: forecast,
     });
   } catch (error) {
     console.error('Weather API error:', error);
