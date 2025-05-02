@@ -86,7 +86,6 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error('Weather API error:', error);
-
     return NextResponse.json({ message: 'Failed to fetch weather data' }, { status: 500 });
   }
 }
