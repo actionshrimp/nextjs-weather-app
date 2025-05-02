@@ -1,6 +1,12 @@
 # Weather dashboard
 
+Experimenting with using `aider` as part of the workflow for setting up a simple weather dashboard app, using OpenWeatherMap.
+
 ## Setup (development mode)
+
+- To get an `OPENWEATHERMAP_API_KEY`, please [sign up](https://home.openweathermap.org/users/sign_up) to OpenWeatherMap, and grab an API key from there.
+
+- Then:
 
     cp .env.{example,local}
     # update .env.local with your OPENWEATHERMAP_API_KEY
