@@ -10,11 +10,13 @@ View the deployed version [here](https://nextjs-weather-app-azure.vercel.app/).
 
 - Then:
 
+```sh
     cp .env.{example,local}
     # update .env.local with your OPENWEATHERMAP_API_KEY
 
     npm ci
     npm run dev
+```
 
 ## Run the tests
 
