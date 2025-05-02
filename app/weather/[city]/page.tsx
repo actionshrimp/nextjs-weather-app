@@ -4,12 +4,13 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { WeatherData, ForecastData } from "@/types/weather";
+import Image from 'next/image';
 
 export default function WeatherPage() {
   const params = useParams();
   const router = useRouter();
   const city = params.city as string;
-  
+
   const [currentWeather, setCurrentWeather] = useState<WeatherData | null>(null);
   const [forecast, setForecast] = useState<ForecastData[] | null>(null);
   const [loading, setLoading] = useState(true);
@@ -20,14 +21,14 @@ export default function WeatherPage() {
       try {
         setLoading(true);
         setError(null);
-        
+
         const response = await fetch(`/api/weather?city=${encodeURIComponent(city)}`);
-        
+
         if (!response.ok) {
           const errorData = await response.json();
           throw new Error(errorData.message || "Failed to fetch weather data");
         }
-        
+
         const data = await response.json();
         setCurrentWeather(data.current);
         setForecast(data.forecast);
@@ -69,9 +70,9 @@ export default function WeatherPage() {
       <Link href="/" className="text-blue-500 hover:underline mb-6 inline-block">
         ← Back to search
       </Link>
-      
+
       <h1 className="text-3xl font-bold mb-6">Weather for {city}</h1>
-      
+
       {currentWeather && (
         <div className="bg-white rounded-lg shadow-md p-6 mb-6">
           <div className="flex flex-col md:flex-row items-center justify-between">
@@ -80,6 +81,7 @@ export default function WeatherPage() {
               <p className="text-4xl font-bold mt-2">{Math.round(currentWeather.temp)}°C</p>
               <p className="text-gray-600 capitalize">{currentWeather.description}</p>
             </div>
+            <div><Image alt={currentWeather.description} src={`https://openweathermap.org/img/wn/${currentWeather.icon}@2x.png`} width={100} height={100} /></div>
             <div className="text-right">
               <div className="flex flex-col">
                 <span className="text-gray-600">Humidity: {currentWeather.humidity}%</span>
@@ -89,7 +91,7 @@ export default function WeatherPage() {
           </div>
         </div>
       )}
-      
+
       {forecast && forecast.length > 0 && (
         <div>
           <h2 className="text-2xl font-semibold mb-4">3-Day Forecast</h2>
