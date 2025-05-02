@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { WeatherData, ForecastData } from '@/types/weather';
 import Image from 'next/image';
+import Forecast from './forecast';
 
 export default function WeatherPage() {
   const params = useParams();
@@ -100,22 +101,8 @@ export default function WeatherPage() {
         <div>
           <h2 className="text-2xl font-semibold mb-4">3-Day Forecast</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {forecast.map((day, index) => (
-              <div key={index} className="bg-white rounded-lg shadow-md p-4">
-                <div className="flex justify-between">
-                  <div>
-                    <h3 className="font-semibold text-lg mb-2">{day.date}</h3>
-                    <p className="text-2xl font-bold">{Math.round(day.temp)}°C</p>
-                    <p className="text-gray-600 capitalize">{day.description}</p>
-                  </div>
-                  <Image
-                    alt={day.description}
-                    src={`https://openweathermap.org/img/wn/${day.icon}@2x.png`}
-                    width={100}
-                    height={100}
-                  />
-                </div>
-              </div>
+            {forecast.map(data => (
+              <Forecast key={data.date} data={data} />
             ))}
           </div>
         </div>
