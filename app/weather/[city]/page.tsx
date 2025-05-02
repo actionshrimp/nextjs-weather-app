@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
-import Link from "next/link";
-import { WeatherData, ForecastData } from "@/types/weather";
+import { useEffect, useState } from 'react';
+import { useParams } from 'next/navigation';
+import Link from 'next/link';
+import { WeatherData, ForecastData } from '@/types/weather';
 import Image from 'next/image';
 
 export default function WeatherPage() {
@@ -25,14 +25,14 @@ export default function WeatherPage() {
 
         if (!response.ok) {
           const errorData = await response.json();
-          throw new Error(errorData.message || "Failed to fetch weather data");
+          throw new Error(errorData.message || 'Failed to fetch weather data');
         }
 
         const data = await response.json();
         setCurrentWeather(data.current);
         setForecast(data.forecast);
       } catch (err) {
-        setError(err instanceof Error ? err.message : "An unexpected error occurred");
+        setError(err instanceof Error ? err.message : 'An unexpected error occurred');
       } finally {
         setLoading(false);
       }
@@ -81,7 +81,12 @@ export default function WeatherPage() {
               <p className="text-gray-600 capitalize">{currentWeather.description}</p>
             </div>
             <div className="text-right">
-              <Image alt={currentWeather.description} src={`https://openweathermap.org/img/wn/${currentWeather.icon}@2x.png`} width={100} height={100} />
+              <Image
+                alt={currentWeather.description}
+                src={`https://openweathermap.org/img/wn/${currentWeather.icon}@2x.png`}
+                width={100}
+                height={100}
+              />
               <div className="flex flex-col">
                 <span className="text-gray-600">Humidity: {currentWeather.humidity}%</span>
                 <span className="text-gray-600">Wind: {currentWeather.windSpeed} m/s</span>
@@ -103,7 +108,12 @@ export default function WeatherPage() {
                     <p className="text-2xl font-bold">{Math.round(day.temp)}°C</p>
                     <p className="text-gray-600 capitalize">{day.description}</p>
                   </div>
-                  <Image alt={day.description} src={`https://openweathermap.org/img/wn/${day.icon}@2x.png`} width={100} height={100} />
+                  <Image
+                    alt={day.description}
+                    src={`https://openweathermap.org/img/wn/${day.icon}@2x.png`}
+                    width={100}
+                    height={100}
+                  />
                 </div>
               </div>
             ))}

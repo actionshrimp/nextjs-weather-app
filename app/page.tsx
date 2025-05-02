@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { useState, FormEvent } from "react";
-import { useRouter } from "next/navigation";
+import { useState, FormEvent } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function Home() {
-  const [city, setCity] = useState("");
+  const [city, setCity] = useState('');
   const router = useRouter();
 
   const handleSubmit = (e: FormEvent) => {
@@ -27,7 +27,7 @@ export default function Home() {
               type="text"
               id="city"
               value={city}
-              onChange={(e) => setCity(e.target.value)}
+              onChange={e => setCity(e.target.value)}
               placeholder="e.g., London"
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               required

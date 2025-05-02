@@ -1,17 +1,14 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 
 const API_KEY = process.env.OPENWEATHERMAP_API_KEY;
-const BASE_URL = "https://api.openweathermap.org/data/2.5";
+const BASE_URL = 'https://api.openweathermap.org/data/2.5';
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
-  const city = searchParams.get("city");
+  const city = searchParams.get('city');
 
   if (!city) {
-    return NextResponse.json(
-      { message: "City parameter is required" },
-      { status: 400 }
-    );
+    return NextResponse.json({ message: 'City parameter is required' }, { status: 400 });
   }
 
   try {
@@ -23,12 +20,9 @@ export async function GET(request: NextRequest) {
     if (!currentWeatherResponse.ok) {
       const errorData = await currentWeatherResponse.json();
       if (currentWeatherResponse.status === 404) {
-        return NextResponse.json(
-          { message: "City not found" },
-          { status: 404 }
-        );
+        return NextResponse.json({ message: 'City not found' }, { status: 404 });
       }
-      throw new Error(errorData.message || "Failed to fetch current weather data");
+      throw new Error(errorData.message || 'Failed to fetch current weather data');
     }
 
     const currentWeatherData = await currentWeatherResponse.json();
@@ -39,7 +33,7 @@ export async function GET(request: NextRequest) {
     );
 
     if (!forecastResponse.ok) {
-      throw new Error("Failed to fetch forecast data");
+      throw new Error('Failed to fetch forecast data');
     }
 
     const forecastData = await forecastResponse.json();
@@ -65,28 +59,28 @@ export async function GET(request: NextRequest) {
 
     for (const forecast of forecastList) {
       const forecastDate = new Date(forecast.dt * 1000);
-      const dateString = forecastDate.toISOString().split("T")[0];
-      
+      const dateString = forecastDate.toISOString().split('T')[0];
+
       // Only include forecasts for future dates and around noon (12-15h)
       if (
-        forecastDate >= tomorrow && 
+        forecastDate >= tomorrow &&
         !processedDates.has(dateString) &&
-        forecastDate.getHours() >= 12 && 
+        forecastDate.getHours() >= 12 &&
         forecastDate.getHours() <= 15
       ) {
         dailyForecasts.push({
-          date: new Date(forecast.dt * 1000).toLocaleDateString("en-GB", {
-            weekday: "short",
-            month: "short",
-            day: "numeric",
+          date: new Date(forecast.dt * 1000).toLocaleDateString('en-GB', {
+            weekday: 'short',
+            month: 'short',
+            day: 'numeric',
           }),
           temp: forecast.main.temp,
           description: forecast.weather[0].description,
           icon: forecast.weather[0].icon,
         });
-        
+
         processedDates.add(dateString);
-        
+
         // Stop after we have 3 days
         if (dailyForecasts.length === 3) {
           break;
@@ -99,11 +93,8 @@ export async function GET(request: NextRequest) {
       forecast: dailyForecasts,
     });
   } catch (error) {
-    console.error("Weather API error:", error);
-    
-    return NextResponse.json(
-      { message: "Failed to fetch weather data" },
-      { status: 500 }
-    );
+    console.error('Weather API error:', error);
+
+    return NextResponse.json({ message: 'Failed to fetch weather data' }, { status: 500 });
   }
 }
