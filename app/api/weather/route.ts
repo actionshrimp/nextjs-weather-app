@@ -13,9 +13,11 @@ export async function GET(request: NextRequest) {
   }
 
   try {
+    let q = city.replaceAll('%2C', ',');
+
     // Get current weather
     const currentWeatherResponse = await fetch(
-      `${BASE_URL}/weather?q=${encodeURIComponent(city)}&units=metric&appid=${API_KEY}`
+      `${BASE_URL}/weather?q=${q}&units=metric&appid=${API_KEY}`
     );
 
     if (!currentWeatherResponse.ok) {
@@ -28,9 +30,10 @@ export async function GET(request: NextRequest) {
 
     const currentWeatherData = await currentWeatherResponse.json();
 
+
     // Get forecast data
     const forecastResponse = await fetch(
-      `${BASE_URL}/forecast?q=${encodeURIComponent(city)}&units=metric&appid=${API_KEY}`
+      `${BASE_URL}/forecast?q=${q}&units=metric&appid=${API_KEY}`
     );
 
     if (!forecastResponse.ok) {
